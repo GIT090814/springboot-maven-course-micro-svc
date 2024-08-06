@@ -33,5 +33,22 @@ pipeline{
                 }  
             }
         }
-	}
+      stage('Docker Build') {
+       steps {
+        sh 'docker build -t rajesh1985/spring-petclinic:latest .'
+      }
+    }
+       stage('Docker Push') {
+      steps {
+        withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]) {
+          sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPassword}"
+          sh 'docker push rajesh1985/spring-petclinic:latest'
+        }
+      }
+
+
 }
+}
+}							 
+	
+
